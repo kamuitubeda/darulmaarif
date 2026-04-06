@@ -1,0 +1,103 @@
+{
+  "hero": {
+    "title": "Pendaftaran Santri Baru",
+    "description": "Mari melangkah bersama membentuk generasi rabbani yang berilmu, bertakwa, dan berakhlak mulia. Pendaftaran tahun ajaran baru resmi dibuka.",
+    "cta_text": "Daftar Sekarang",
+    "cta_link": "/psb/daftar"
+  },
+  "flow": {
+    "title": "Alur Pendaftaran",
+    "steps": [
+      {
+        "title": "Isi Formulir Pendaftaran",
+        "description": "Buka halaman pendaftaran dan lengkapi biodata calon santri."
+      },
+      {
+        "title": "Upload Dokumen",
+        "description": "Unggah berkas persyaratan seperti KK, Akta Kelahiran, dan Pas Foto."
+      },
+      {
+        "title": "Verifikasi Admin",
+        "description": "Tim verifikasi kami akan memeriksa kelengkapan berkas Anda."
+      },
+      {
+        "title": "Pengumuman Hasil Seleksi",
+        "description": "Hasil seleksi akan diumumkan melalui Portal Utama dan WhatsApp."
+      }
+    ]
+  },
+  "requirements": {
+    "title": "Syarat Pendaftaran",
+    "items": [
+      "Beragama Islam dan sanggup menaati aturan pesantren.",
+      "Lulusan pendidikan terakhir SD/MI (untuk tingkat MTs) atau SMP/MTs (untuk tingkat MA).",
+      "Fotokopi Kartu Keluarga (KK) sebanyak 2 lembar.",
+      "Fotokopi Akta Kelahiran sebanyak 2 lembar.",
+      "Pas Foto terbaru berlatar belakang merah (3x4) 4 lembar.",
+      "Mengisi surat pernyataan wali santri bermaterai."
+    ]
+  },
+  "fees": {
+    "title": "Biaya Pendaftaran",
+    "packages": [
+      {
+        "title": "Formulir PSB",
+        "amount": "Rp 250.000",
+        "details": ["Biaya cetak formulir", "Buku panduan PSB", "ID Card seleksi"]
+      },
+      {
+        "title": "Uang Gedung (Infaq)",
+        "amount": "Rp 3.500.000",
+        "details": ["Sarana asrama", "Fasilitas kelas", "Dibayarkan saat diterima"]
+      },
+      {
+        "title": "SPP Bulanan",
+        "amount": "Rp 850.000",
+        "details": ["Makan 3x sehari", "Laundry pakaian", "Biaya pendidikan"]
+      }
+    ]
+  },
+  "schedule": {
+    "title": "Jadwal Seleksi",
+    "events": [
+      {
+        "date": "01 - 30 Agustus 2024",
+        "event": "Pendaftaran Online / Pengukuran Seragam"
+      },
+      {
+        "date": "02 September 2024",
+        "event": "Tes Tertulis & Wawancara"
+      },
+      {
+        "date": "10 September 2024",
+        "event": "Pengumuman Kelulusan"
+      },
+      {
+        "date": "12 - 20 September 2024",
+        "event": "Daftar Ulang dan Penyerahan Berkas Asli"
+      }
+    ]
+  },
+  "faq": {
+    "title": "Tanya Jawab (FAQ)",
+    "questions": [
+      {
+        "q": "Apakah pendaftaran bisa dilakukan langsung (offline)?",
+        "a": "Ya, pendaftaran offline dapat dilakukan di sekretariat PSB Pondok Pesantren Darul Maarif pada jam kerja (08.00 - 15.00 WIB)."
+      },
+      {
+        "q": "Apakah uang pendaftaran bisa dikembalikan jika tidak lulus seleksi?",
+        "a": "Mohon maaf, uang pembelian formulir PSB tidak dapat dikembalikan sesuai kesepakatan awal."
+      },
+      {
+        "q": "Bolehkah santri tidak menginap di asrama (Pulang-Pergi)?",
+        "a": "Sistem kami adalah boarding school penuh (asrama wajib). Kepulangan santri dijadwalkan secara resmi sekali per semester."
+      }
+    ]
+  },
+  "final_cta": {
+    "title": "Siap Bergabung dengan Kami?",
+    "cta_text": "Mulai Pendaftaran",
+    "cta_link": "/psb/daftar"
+  }
+}
