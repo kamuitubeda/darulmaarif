@@ -11,5 +11,8 @@ export default defineNuxtConfig({
   },
   colorMode: {
     preference: 'light' // default to light mode for an institution site, they can toggle it later
+  },
+  nitro: {
+    preset: "cloudflare-pages"
   }
 })
