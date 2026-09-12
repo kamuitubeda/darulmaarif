@@ -17,24 +17,23 @@
     </div>
 
     <!-- 1. Mudirul Ma'had -->
-    <div class="mb-5">
+    <div class="mb-5" v-if="profile">
       <div class="flex items-center gap-2.5 mb-3 px-1">
         <div class="w-1 h-5 bg-green-500 rounded-full shrink-0"></div>
         <UIcon name="i-heroicons-user-circle" class="w-4 h-4 text-green-600 shrink-0" />
         <h2 class="font-extrabold text-gray-800 text-sm tracking-tight">Mudirul Ma'had</h2>
       </div>
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
-        <UAvatar src="https://picsum.photos/seed/kyai/200/200" size="2xl" class="ring-2 ring-green-200 shrink-0" />
+        <UAvatar :src="profile.kyai_photo_url || 'https://picsum.photos/seed/kyai/200/200'" size="2xl" class="ring-2 ring-green-200 shrink-0" />
         <div>
-          <h3 class="font-extrabold text-gray-800 text-base leading-tight">K.H. Ahmad Dahlan, Lc., M.A.</h3>
-          <p class="text-xs text-green-600 font-bold mt-0.5 mb-2">Pengasuh & Pimpinan</p>
-          <p class="text-xs text-gray-500 leading-relaxed">Membimbing Pondok Pesantren Darul Maarif sejak 1990 menuju lembaga pendidikan Islam unggulan.</p>
+          <h3 class="font-extrabold text-gray-800 text-base leading-tight">{{ profile.kyai_name }}</h3>
+          <p class="text-xs text-green-600 font-bold mt-0.5 mb-2">{{ profile.kyai_title }}</p>
         </div>
       </div>
     </div>
 
     <!-- 2. Sejarah Singkat -->
-    <div class="mb-5">
+    <div class="mb-5" v-if="profile">
       <div class="flex items-center gap-2.5 mb-3 px-1">
         <div class="w-1 h-5 bg-green-500 rounded-full shrink-0"></div>
         <UIcon name="i-heroicons-book-open" class="w-4 h-4 text-green-600 shrink-0" />
@@ -43,34 +42,32 @@
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <img src="https://picsum.photos/seed/pesantren_profil/800/400" class="w-full h-40 object-cover" alt="Gedung Pesantren" />
         <div class="p-5">
-          <p class="text-sm text-gray-600 leading-relaxed text-justify">
-            Pondok Pesantren Darul Maarif didirikan pada tahun 1990 dengan niat murni untuk mencetak generasi muslim yang <em>tafaqquh fiddin</em> (paham agama) serta memiliki kompetensi global. Menggabungkan kurikulum salaf dan pendidikan modern, kami terus berkembang membina ribuan santri dari berbagai penjuru nusantara.
-          </p>
+          <p class="text-sm text-gray-600 leading-relaxed text-justify whitespace-pre-wrap">{{ profile.history }}</p>
         </div>
       </div>
     </div>
 
     <!-- 3. Visi & Misi -->
-    <div class="mb-5">
+    <div class="mb-5" v-if="profile">
       <div class="flex items-center gap-2.5 mb-3 px-1">
         <div class="w-1 h-5 bg-green-500 rounded-full shrink-0"></div>
         <UIcon name="i-heroicons-light-bulb" class="w-4 h-4 text-green-600 shrink-0" />
         <h2 class="font-extrabold text-gray-800 text-sm tracking-tight">Visi & Misi</h2>
       </div>
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div class="bg-green-50 p-4 rounded-2xl border border-green-100">
           <div class="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center mb-3">
             <UIcon name="i-heroicons-eye" class="w-5 h-5 text-green-600" />
           </div>
           <h3 class="font-extrabold text-gray-800 text-sm mb-1">Visi</h3>
-          <p class="text-xs text-gray-600 leading-relaxed">Menjadi pusat pendidikan Islam unggulan yang melahirkan generasi Rabbani.</p>
+          <p class="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap">{{ profile.vision }}</p>
         </div>
         <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
           <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center mb-3">
             <UIcon name="i-heroicons-paper-airplane" class="w-5 h-5 text-blue-600" />
           </div>
           <h3 class="font-extrabold text-gray-800 text-sm mb-1">Misi</h3>
-          <p class="text-xs text-gray-600 leading-relaxed">Menyelenggarakan pendidikan Islam komprehensif, berkualitas dan berdaya saing.</p>
+          <p class="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap">{{ profile.mission }}</p>
         </div>
       </div>
     </div>
@@ -107,6 +104,11 @@
 
 <script setup>
 definePageMeta({ title: 'Profil Pesantren - Darul Maarif' })
+
+const supabase = useSupabaseClient()
+const { data: profile } = await useAsyncData('public-profile', () =>
+  supabase.from('site_profile').select('*').eq('id', 1).single().then(r => r.data)
+)
 
 const schedule = [
   { time: '03.30 – 04.00', name: 'Sholat Tahajud Berjamaah', highlight: true },

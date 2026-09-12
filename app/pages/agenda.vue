@@ -40,7 +40,7 @@
           <!-- Timeline Date Badge -->
           <div class="absolute left-0 top-1 w-12 h-14 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center overflow-hidden z-10 transition-transform duration-300 group-hover:scale-105">
             <span class="text-[10px] font-bold text-white bg-green-500 w-full text-center py-0.5 uppercase tracking-widest">{{ item.month }}</span>
-            <span class="text-lg font-extrabold text-gray-800 leading-none mt-1">{{ item.date }}</span>
+            <span class="text-lg font-extrabold text-gray-800 leading-none mt-1">{{ item.date_day }}</span>
           </div>
           
           <!-- Event Content Card -->
@@ -81,62 +81,34 @@ import { ref, computed } from 'vue'
 
 definePageMeta({ title: 'Daftar Agenda - Darul Maarif' })
 
-const activeMonth = ref('Semua')
-const months = ['Semua', 'Agustus', 'September', 'Oktober', 'November']
+const supabase = useSupabaseClient()
 
-// Mock Extended Agenda Database
-const agendas = [
-  {
-    title: 'Penerimaan Rapor & Pembagian Kelas Ganjil',
-    category: 'Akademik',
-    date: '14',
-    month: 'Agu',
-    time: '08:00 - 11:30 WIB',
-    location: 'Aula Utama Lt. 2',
-    description: 'Bagi seluruh santri diwajibkan didampingi oleh satu wali untuk pengarahan akademik.'
-  },
-  {
-    title: 'Kajian Akbar Dhuha & Bedah Kitab Fathul Mu\'in',
-    category: 'Kajian',
-    date: '20',
-    month: 'Agu',
-    time: '08:00 - Selesai',
-    location: 'Masjid Jami Pesantren',
-    description: 'Terbuka untuk masyarakat umum. Diharapkan membawa kitab masing-masing.'
-  },
-  {
-    title: 'Pembukaan Pekan Olahraga Santri (PORSENI)',
-    category: 'Ekstrakurikuler',
-    date: '02',
-    month: 'Sep',
-    time: '07:00 - 15:00 WIB',
-    location: 'Lapangan Hijau & GOR',
-    description: 'Lomba antar asrama meliputi futsal, panahan, badminton, dan voli.'
-  },
-  {
-    title: 'Ujian Tasmi\' Hafalan 5 Juz',
-    category: 'Akademik',
-    date: '15',
-    month: 'Sep',
-    time: 'Ba\'da Subuh - Selesai',
-    location: 'Markaz Tahfidz Putri',
-    description: 'Ujian terbuka bagi santriwati fase pertama tahfidz intensif.'
-  },
-  {
-    title: 'Rihlah & Study Tour Edukatif Santri MA',
-    category: 'Acara',
-    date: '10',
-    month: 'Okt',
-    time: '06:00 - 20:00 WIB',
-    location: 'Situs Sejarah Walisongo',
-    description: 'Kegiatan tahunan bagi santri Aliyah untuk mengenali rute dakwah ulama nusantara.'
-  }
-]
+const { data: dbAgendas, pending } = await useAsyncData('public-agendas', () =>
+  supabase.from('agendas').select('*').eq('is_active', true).order('date', { ascending: true }).then(r => r.data ?? [])
+)
+
+const agendas = computed(() => {
+  return (dbAgendas.value || []).map(item => {
+    const d = new Date(item.date)
+    return {
+      ...item,
+      date_day: new Intl.DateTimeFormat('id-ID', { day: '2-digit' }).format(d),
+      month: new Intl.DateTimeFormat('id-ID', { month: 'short' }).format(d),
+      full_month: new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(d)
+    }
+  })
+})
+
+const months = computed(() => {
+  const m = new Set(agendas.value.map(a => a.full_month))
+  return ['Semua', ...Array.from(m)]
+})
+
+const activeMonth = ref('Semua')
 
 const filteredAgendas = computed(() => {
-  if (activeMonth.value === 'Semua') return agendas
-  const shortMonth = activeMonth.value.substring(0, 3) 
-  return agendas.filter(item => item.month === shortMonth)
+  if (activeMonth.value === 'Semua') return agendas.value
+  return agendas.value.filter(item => item.full_month === activeMonth.value)
 })
 
 const getCategoryColor = (cat) => {

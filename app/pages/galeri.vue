@@ -37,7 +37,7 @@
         class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer"
       >
         <div class="aspect-[4/3] relative overflow-hidden bg-gray-200">
-          <img :src="item.image" :alt="item.title" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+          <img :src="item.image_url" :alt="item.title" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
         </div>
         <div class="p-2.5">
@@ -57,27 +57,21 @@ definePageMeta({
   title: 'Galeri - Darul Maarif'
 })
 
-const categories = ['Semua', 'Fasilitas', 'Akademik', 'Ekstrakurikuler']
+const supabase = useSupabaseClient()
+
+const { data: dbGalleryItems, pending } = await useAsyncData('public-gallery', () =>
+  supabase.from('gallery').select('*').eq('is_active', true).order('created_at', { ascending: false }).then(r => r.data ?? [])
+)
+
+const categories = computed(() => {
+  const cats = new Set((dbGalleryItems.value || []).map(i => i.category))
+  return ['Semua', ...Array.from(cats)]
+})
 const activeCategory = ref('Semua')
 
-const galleryItems = [
-  // Fasilitas
-  { title: 'Gedung Asrama Putra', category: 'Fasilitas', image: 'https://picsum.photos/seed/asrama1/400/300' },
-  { title: 'Masjid Raya Pesantren', category: 'Fasilitas', image: 'https://picsum.photos/seed/masjid/400/300' },
-  { title: 'Perpustakaan & Ruang Baca', category: 'Fasilitas', image: 'https://picsum.photos/seed/perpus/400/300' },
-  // Akademik
-  { title: 'Kajian Kitab Kuning', category: 'Akademik', image: 'https://picsum.photos/seed/kitab/400/300' },
-  { title: 'Hafalan Al-Quran Pagi', category: 'Akademik', image: 'https://picsum.photos/seed/quran/400/300' },
-  { title: 'Praktikum Komputer', category: 'Akademik', image: 'https://picsum.photos/seed/komputer/400/300' },
-  // Ekstrakurikuler
-  { title: 'Latihan Memanah', category: 'Ekstrakurikuler', image: 'https://picsum.photos/seed/panah/400/300' },
-  { title: 'Kegiatan Pramuka Santri', category: 'Ekstrakurikuler', image: 'https://picsum.photos/seed/pramuka/400/300' },
-  { title: 'Bela Diri Pancak Silat', category: 'Ekstrakurikuler', image: 'https://picsum.photos/seed/silat/400/300' },
-]
-
 const filteredGallery = computed(() => {
-  if (activeCategory.value === 'Semua') return galleryItems;
-  return galleryItems.filter(item => item.category === activeCategory.value);
+  if (activeCategory.value === 'Semua') return dbGalleryItems.value || [];
+  return (dbGalleryItems.value || []).filter(item => item.category === activeCategory.value);
 })
 </script>
 

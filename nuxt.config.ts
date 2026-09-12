@@ -4,7 +4,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/ui', '@nuxt/content', '@nuxtjs/supabase'],
   supabase: {
-    redirect: false // Disables the hard auth guard
+    redirect: false
+  },
+  routeRules: {
+    '/admin/**': { ssr: false } // Admin panel runs client-side only
   },
   future: {
     compatibilityVersion: 4,

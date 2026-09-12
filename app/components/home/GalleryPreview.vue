@@ -15,7 +15,7 @@
         class="flex-shrink-0 w-60 sm:w-72 snap-center rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-white group cursor-pointer"
       >
         <div class="relative aspect-[4/3] bg-gray-200 overflow-hidden">
-          <img :src="item.image" :alt="item.title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+          <img :src="item.image_url" :alt="item.title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
           <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/10 to-transparent"></div>
           
           <div class="absolute bottom-0 left-0 right-0 p-3 pt-6 pointer-events-none">

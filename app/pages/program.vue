@@ -24,10 +24,11 @@
           </div>
           <div>
             <h3 class="font-bold text-gray-800 text-lg mb-1">{{ program.title }}</h3>
-            <p class="text-sm text-gray-600 leading-relaxed mb-3">{{ program.desc }}</p>
+            <p class="text-sm text-gray-600 leading-relaxed mb-3">{{ program.description }}</p>
             <div class="flex gap-2">
-               <span class="text-[10px] font-semibold text-green-700 bg-green-50 px-2 py-1 rounded">Mts/SMP</span>
-               <span class="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded">MA/SMA</span>
+               <span v-for="lvl in program.levels" :key="lvl" class="text-[10px] font-semibold text-green-700 bg-green-50 px-2 py-1 rounded border border-green-100">
+                 {{ lvl }}
+               </span>
             </div>
           </div>
         </div>
@@ -41,30 +42,9 @@ definePageMeta({
   title: 'Program Pendidikan - Darul Maarif'
 })
 
-const programs = [
-  {
-    title: 'Program Tahfidz (Takhassus)',
-    desc: 'Program khusus bagi santri yang difokuskan pada hafalan Al-Qur\'an 30 Juz secara mutqin dengan target capaian terstruktur selama 3 tahun.',
-    icon: 'i-heroicons-book-open',
-    color: 'bg-green-500'
-  },
-  {
-    title: 'Kajian Kitab Kuning (Salaf)',
-    desc: 'Metode pengajaran turats (kitab kuning) nahwu, sharaf, fiqih, dan tauhid untuk menjaga tradisi keilmuan pesantren nusantara.',
-    icon: 'i-heroicons-bookmark-square',
-    color: 'bg-amber-500'
-  },
-  {
-    title: 'Bahasa Arab & Inggris',
-    desc: 'Program habituasi bahasa global di area asrama untuk mempersiapkan santri menembus beasiswa perguruan tinggi luar negeri.',
-    icon: 'i-heroicons-language',
-    color: 'bg-blue-500'
-  },
-  {
-    title: 'Sains & Teknologi',
-    desc: 'Pembelajaran ekstrakurikuler bidang IT, robotik, dan sains terapan yang diselaraskan dengan nilai syariat Islam.',
-    icon: 'i-heroicons-beaker',
-    color: 'bg-purple-500'
-  }
-]
+const supabase = useSupabaseClient()
+
+const { data: programs, pending } = await useAsyncData('public-programs', () =>
+  supabase.from('programs').select('*').eq('is_active', true).order('sort_order').then(r => r.data ?? [])
+)
 </script>

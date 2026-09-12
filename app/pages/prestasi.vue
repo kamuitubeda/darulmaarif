@@ -35,11 +35,9 @@ definePageMeta({
   title: 'Prestasi - Darul Maarif'
 })
 
-const achievements = [
-  { level: 'Nasional', title: 'Juara 1 Musabaqah Hifdzil Quran 30 Juz', name: 'Ahmad Faiz', year: '2024' },
-  { level: 'Provinsi', title: 'Medali Emas Olimpiade Sains Nasional (Matematika)', name: 'Budi Santoso', year: '2023' },
-  { level: 'Kabupaten', title: 'Juara Umum Lomba Pidato Bahasa Arab', name: 'Tim Pidato MA', year: '2023' },
-  { level: 'Nasional', title: 'Top 10 Lomba Kaligrafi Kontemporer', name: 'Zaidan Rizqi', year: '2023' },
-  { level: 'Provinsi', title: 'Juara 2 Pencak Silat Tapak Suci', name: 'Usman Ali', year: '2022' }
-]
+const supabase = useSupabaseClient()
+
+const { data: achievements, pending } = await useAsyncData('public-achievements', () =>
+  supabase.from('achievements').select('*').eq('is_active', true).order('year', { ascending: false }).order('created_at', { ascending: false }).then(r => r.data ?? [])
+)
 </script>

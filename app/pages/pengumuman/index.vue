@@ -26,13 +26,13 @@
     <div v-else-if="announcements && announcements.length > 0" class="flex flex-col gap-5">
       <article
         v-for="item in announcements"
-        :key="item._path"
+        :key="item.id"
         class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group transition-all duration-300 hover:shadow-md hover:border-green-100 cursor-pointer"
-        @click="navigateTo(item._path)"
+        @click="navigateTo(`/pengumuman/${item.id}`)"
       >
         <!-- Cover Image - full width on top -->
-        <div v-if="item.image" class="w-full h-44 bg-gray-200 overflow-hidden relative">
-          <img :src="item.image" :alt="item.title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div v-if="item.image_url" class="w-full h-44 bg-gray-200 overflow-hidden relative">
+          <img :src="item.image_url" :alt="item.title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
           <!-- Category badge on image -->
           <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm shadow-sm"
@@ -88,10 +88,14 @@ import { computed } from 'vue'
 
 definePageMeta({ title: 'Pengumuman - Darul Maarif' })
 
-const { data: announcements, pending } = await useAsyncData('announcements-list', () =>
-  queryContent('/pengumuman')
-    .sort({ date: -1 })
-    .find()
+const supabase = useSupabaseClient()
+
+const { data: announcements, pending } = useAsyncData('announcements-list', () =>
+  supabase.from('announcements')
+    .select('id, title, summary, category, image_url, date')
+    .eq('is_active', true)
+    .order('date', { ascending: false })
+    .then(r => r.data ?? [])
 )
 
 const formatDate = (dateStr) => {

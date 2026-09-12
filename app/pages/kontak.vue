@@ -29,53 +29,53 @@
       </div>
       <div class="p-4">
         <h3 class="font-bold text-gray-800 mb-0.5">Pondok Pesantren Darul Maarif</h3>
-        <p class="text-sm text-gray-500">Jl. Pendidikan No. 123, Sukamaju, Jawa Barat 40123</p>
+        <p class="text-sm text-gray-500">{{ contact?.address }}</p>
       </div>
     </div>
 
     <!-- Contact Actions -->
     <h3 class="font-bold text-gray-700 text-xs uppercase tracking-widest mb-3 px-1">Saluran Komunikasi</h3>
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-50 mb-6">
-      <a href="tel:02212345678" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
+      <a :href="contact ? `tel:${contact.phone.replace(/\\D/g, '')}` : '#'" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
         <div class="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center shrink-0 group-hover:bg-green-100 transition-colors">
           <UIcon name="i-heroicons-phone" class="w-5 h-5 text-green-600" />
         </div>
         <div class="flex-1">
           <div class="text-sm font-bold text-gray-800">Telepon Pondok</div>
-          <div class="text-xs text-gray-500">(022) 1234-567</div>
+          <div class="text-xs text-gray-500">{{ contact?.phone }}</div>
         </div>
         <UIcon name="i-heroicons-chevron-right" class="w-4 h-4 text-gray-300 group-hover:text-green-500 transition-colors" />
       </a>
 
-      <a href="https://wa.me/6281234567890" target="_blank" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
+      <a :href="contact ? `https://wa.me/${contact.whatsapp}` : '#'" target="_blank" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
         <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
           <UIcon name="i-heroicons-device-phone-mobile" class="w-5 h-5 text-emerald-600" />
         </div>
         <div class="flex-1">
           <div class="text-sm font-bold text-gray-800">WhatsApp Admin</div>
-          <div class="text-xs text-gray-500">+62 812 3456 7890</div>
+          <div class="text-xs text-gray-500">+{{ contact?.whatsapp }}</div>
         </div>
         <UIcon name="i-heroicons-chevron-right" class="w-4 h-4 text-gray-300 group-hover:text-green-500 transition-colors" />
       </a>
 
-      <a href="mailto:info@darulmaarif.sch.id" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
+      <a :href="contact ? `mailto:${contact.email}` : '#'" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
         <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
           <UIcon name="i-heroicons-envelope" class="w-5 h-5 text-blue-600" />
         </div>
         <div class="flex-1">
           <div class="text-sm font-bold text-gray-800">Email</div>
-          <div class="text-xs text-gray-500">info@darulmaarif.sch.id</div>
+          <div class="text-xs text-gray-500">{{ contact?.email }}</div>
         </div>
         <UIcon name="i-heroicons-chevron-right" class="w-4 h-4 text-gray-300 group-hover:text-green-500 transition-colors" />
       </a>
 
-      <a href="https://instagram.com" target="_blank" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
+      <a :href="contact ? `https://instagram.com/${contact.instagram.replace('@', '')}` : '#'" target="_blank" class="flex items-center gap-4 p-4 group active:bg-gray-50 transition-colors">
         <div class="w-11 h-11 rounded-xl bg-pink-50 flex items-center justify-center shrink-0 group-hover:bg-pink-100 transition-colors">
           <UIcon name="i-heroicons-camera" class="w-5 h-5 text-pink-600" />
         </div>
         <div class="flex-1">
           <div class="text-sm font-bold text-gray-800">Instagram</div>
-          <div class="text-xs text-gray-500">@darulmaarif.official</div>
+          <div class="text-xs text-gray-500">{{ contact?.instagram }}</div>
         </div>
         <UIcon name="i-heroicons-chevron-right" class="w-4 h-4 text-gray-300 group-hover:text-green-500 transition-colors" />
       </a>
@@ -95,7 +95,10 @@
 
 <script setup>
 definePageMeta({ title: 'Kontak - Darul Maarif' })
-
+const supabase = useSupabaseClient()
+const { data: contact } = await useAsyncData('public-contact', () =>
+  supabase.from('contacts').select('*').eq('id', 1).single().then(r => r.data)
+)
 const hours = [
   { day: 'Senin – Kamis', time: '08.00 – 15.00 WIB', open: true },
   { day: 'Jumat', time: '08.00 – 11.30 WIB', open: true },

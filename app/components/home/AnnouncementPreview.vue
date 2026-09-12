@@ -16,13 +16,13 @@
     <div v-else-if="announcements && announcements.length > 0" class="space-y-3">
       <div
         v-for="item in announcements"
-        :key="item._path"
+        :key="item.id"
         class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col active:scale-[0.98] transition-all duration-200 hover:shadow-md cursor-pointer group tap-highlight-transparent"
-        @click="navigateTo(item._path)"
+        @click="navigateTo(`/pengumuman/${item.id}`)"
       >
         <!-- Image Thumbnail -->
-        <div v-if="item.image" class="h-32 w-full bg-gray-100 overflow-hidden">
-          <img :src="item.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div v-if="item.image_url" class="h-32 w-full bg-gray-100 overflow-hidden">
+          <img :src="item.image_url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         </div>
         <div class="p-4">
           <div class="flex items-center justify-between mb-2">
@@ -45,11 +45,15 @@
 </template>
 
 <script setup>
+const supabase = useSupabaseClient()
+
 const { data: announcements, pending } = useAsyncData('home-announcements', () =>
-  queryContent('/pengumuman')
-    .sort({ date: -1 })
+  supabase.from('announcements')
+    .select('id, title, summary, category, image_url, date')
+    .eq('is_active', true)
+    .order('date', { ascending: false })
     .limit(3)
-    .find()
+    .then(r => r.data ?? [])
 )
 
 const formatDate = (dateStr) => {
